@@ -18,12 +18,9 @@ export class Database {
   }
 
   public async getStats(userID: string): Promise<PlayerStats> {
-    const stats = await this.stats.get(userID);
-    if (stats === undefined) {
-      return new PlayerStats();
-    } else {
-      return stats;
-    }
+    const stats: PlayerStats = await this.stats.get(userID);
+    const blank = new PlayerStats();
+    return { ...blank, ...stats };
   }
 }
 
