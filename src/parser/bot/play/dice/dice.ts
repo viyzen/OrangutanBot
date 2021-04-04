@@ -1,5 +1,5 @@
-import { db } from "../Database";
-import { rl } from "../RateLimiter";
+import { db } from "../../../../playerstats/Database";
+import { rl } from "../../../../RateLimiter";
 
 export default async function (
   args: string[],

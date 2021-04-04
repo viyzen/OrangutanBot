@@ -1,5 +1,10 @@
 import {
-    Channel, Client, Message, MessageEmbed, Snowflake, TextChannel
+  Channel,
+  Client,
+  Message,
+  MessageEmbed,
+  Snowflake,
+  TextChannel,
 } from "discord.js";
 import dotenv from "dotenv";
 

@@ -13,6 +13,9 @@
   "author": "viyzen",
   "license": "MIT",
   "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/keyv": "^3.1.1",
+    "@types/node": "^14.14.36",
     "@keyv/sqlite": "^2.0.2",
     "dotenv": "^8.2.0",
     "keyv": "^4.0.3",

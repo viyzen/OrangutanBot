@@ -11,6 +11,7 @@ module.exports = {
     "plugin:prettier/recommended",
     "prettier",
   ],
+  ignorePatterns: ["*.js"],
   rules: {
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",

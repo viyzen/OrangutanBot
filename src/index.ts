@@ -1,5 +1,5 @@
-import { CommandBuilder } from "./commands/CommandBuilder";
 import { DiscordAPI } from "./discord-api";
+import { CommandListener } from "./discordCommandListener";
 
 async function start() {
   const discordAPI = new DiscordAPI();
@@ -9,7 +9,8 @@ async function start() {
     console.error(error);
     process.exit();
   }
-  const commandBuilder = new CommandBuilder(discordAPI);
+  const commandListener = new CommandListener(discordAPI);
+  commandListener.start();
 }
 
 start();
