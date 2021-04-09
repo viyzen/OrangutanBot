@@ -14,3 +14,10 @@ export interface RpsResult {
   botChoice: Choices;
   playerWin: WinType;
 }
+
+export interface MultipleResults {
+  playerWins: number;
+  botWins: number;
+  draws: number;
+  botLastChoice: Choices;
+}

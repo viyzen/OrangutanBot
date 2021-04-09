@@ -1,7 +1,7 @@
 import Keyv from "keyv";
 import path from "path";
 
-import { PlayerStats } from "./PlayerStats";
+import { PlayerStats } from "./player-stats";
 
 export class Database {
   private readonly stats: Keyv;

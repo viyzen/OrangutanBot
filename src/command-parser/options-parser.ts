@@ -1,6 +1,6 @@
-import { ParsedInput } from "./ParsedInput";
+import { ParsedInput } from "./parsed-input";
 
-export class SpecialArgumentsParser {
+export class OptionsParser {
   public static getOptions(message: string): { [key: string]: string } {
     if (!message) {
       return {};
@@ -22,7 +22,7 @@ export class SpecialArgumentsParser {
       return {};
     }
 
-    let arrayOptions: Array<string> = SpecialArgumentsParser.splitByDoubleDashesExceptInQuotes(
+    let arrayOptions: Array<string> = OptionsParser.splitByDoubleDashesExceptInQuotes(
       fullOptionsString,
     );
     // we now have ['tags tag1', 'comment a random comment']

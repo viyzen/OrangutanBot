@@ -1,9 +1,11 @@
 import { Message } from "discord.js";
 
+import {
+  AbstractCommandResult,
+} from "./command-parser/abstracts/abstract-command";
+import { MainParser } from "./command-parser/main-parser";
+import { ParsedInput } from "./command-parser/parsed-input";
 import { DiscordAPI } from "./discord-api";
-import { DiscordCommandResult } from "./discordCommandResult";
-import { MainParser } from "./parser/mainParser";
-import { ParsedInput } from "./parser/ParsedInput";
 
 export class CommandListener {
   constructor(private readonly discordAPI: DiscordAPI) {}
@@ -24,7 +26,7 @@ export class CommandListener {
     }
     const parsedInput = ParsedInput.createNew(message);
 
-    const result: DiscordCommandResult = await new MainParser().parse(
+    const result: AbstractCommandResult = await new MainParser().parse(
       parsedInput,
     );
     if (result) {
