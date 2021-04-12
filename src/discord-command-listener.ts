@@ -1,8 +1,6 @@
 import { Message } from "discord.js";
 
-import {
-  AbstractCommandResult,
-} from "./command-parser/abstracts/abstract-command";
+import { AbstractCommandResult } from "./command-parser/abstracts/abstract-command";
 import { MainParser } from "./command-parser/main-parser";
 import { ParsedInput } from "./command-parser/parsed-input";
 import { DiscordAPI } from "./discord-api";
@@ -12,7 +10,6 @@ export class CommandListener {
 
   public start() {
     this.discordAPI.discordClient.on("message", this._executeCommand);
-    //on message _executeCommand with message data
   }
   private _executeCommand = async (message: Message) => {
     if (
@@ -21,7 +18,7 @@ export class CommandListener {
       !message.content ||
       message.channel.type !== "text"
     ) {
-      //cancel if bot, has attachments, has no content, or is not a text channel
+      //cancel if bot, has attachments, has no content, or is not in a text channel
       return;
     }
     const parsedInput = ParsedInput.createNew(message);

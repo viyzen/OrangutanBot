@@ -1,3 +1,6 @@
+import { Message } from "discord.js";
+
+import { db } from "../../../../database/player-stats-repository";
 import { AbstractCommandResult } from "../../../abstracts/abstract-command";
 import { OptionsParser } from "../../../options-parser";
 import { ParsedInput } from "../../../parsed-input";
@@ -5,7 +8,10 @@ import { rps } from "./rps";
 import { Choices, MultipleResults } from "./rps-types";
 
 export class RpsParser {
-  public async parseCommand(args: string): Promise<AbstractCommandResult> {
+  public async parseCommand(
+    args: string,
+    message: Message,
+  ): Promise<AbstractCommandResult> {
     const options = OptionsParser.getOptions(args);
 
     let numberOfRepeats = 1;
@@ -43,6 +49,25 @@ export class RpsParser {
       results.draws += result.playerWin === "DRAW" ? 1 : 0;
       results.botLastChoice = result.botChoice;
     }
+
+    let playerStats = await (await db).findPlayerStatsByUserId(
+      message.author.id,
+    );
+
+    if (playerStats === null) {
+      (await db).createNewPlayerStatsForUserId(message.author.id);
+      console.log(
+        "created new playerstats for user: " + message.author.username,
+      );
+      playerStats = await (await db).findPlayerStatsByUserId(message.author.id);
+    }
+    playerStats.rpsplays += numberOfRepeats;
+    playerStats.rpsdraws += results.draws;
+    playerStats.rpswins += results.playerWins;
+    playerStats.rpslosses += results.botWins;
+
+    await (await db).updatePlayerStatsForUserId(playerStats);
+    console.log("updated playerstats for user: " + message.author.username);
 
     if (numberOfRepeats === 1) {
       const winLossDrawReply = results.playerWins

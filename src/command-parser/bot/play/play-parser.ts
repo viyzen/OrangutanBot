@@ -8,9 +8,15 @@ export class PlayParser {
   public async parse(parsedInput: ParsedInput): Promise<AbstractCommandResult> {
     switch (parsedInput.current) {
       case "rps":
-        return await new RpsParser().parseCommand(parsedInput.remaining);
+        return await new RpsParser().parseCommand(
+          parsedInput.remaining,
+          parsedInput.discordMessage,
+        );
       case "dice":
-        return new DiceParser().parseCommand(parsedInput.remaining);
+        return new DiceParser().parseCommand(
+          parsedInput.remaining,
+          parsedInput.discordMessage,
+        );
       case "tictactoe":
         return new TicTacToeParser().parseCommand(parsedInput.remaining);
       default:

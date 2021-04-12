@@ -1,6 +1,5 @@
 import { DiscordAPI } from "./discord-api";
 import { CommandListener } from "./discord-command-listener";
-
 //entry point
 async function start() {
   //new instance of DiscordAPI, methods for login, msg sending, etc.

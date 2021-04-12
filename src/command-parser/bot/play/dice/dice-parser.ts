@@ -1,10 +1,16 @@
+import { Message } from "discord.js";
+
+import { db } from "../../../../database/player-stats-repository";
 import { AbstractCommandResult } from "../../../abstracts/abstract-command";
 import { OptionsParser } from "../../../options-parser";
 import { ParsedInput } from "../../../parsed-input";
 import { dice } from "./dice";
 
 export class DiceParser {
-  public async parseCommand(args: string): Promise<AbstractCommandResult> {
+  public async parseCommand(
+    args: string,
+    message: Message,
+  ): Promise<AbstractCommandResult> {
     const options = OptionsParser.getOptions(args);
 
     for (const [key, value] of Object.entries(options)) {
@@ -22,7 +28,21 @@ export class DiceParser {
 
     const result = dice.execute({ rollCount });
 
-    console.log(result);
+    let playerStats = await (await db).findPlayerStatsByUserId(
+      message.author.id,
+    );
+
+    if (playerStats === null) {
+      (await db).createNewPlayerStatsForUserId(message.author.id);
+      console.log(
+        "created new playerstats for user: " + message.author.username,
+      );
+      playerStats = await (await db).findPlayerStatsByUserId(message.author.id);
+    }
+    playerStats.dicerolls += rollCount;
+
+    await (await db).updatePlayerStatsForUserId(playerStats);
+    console.log("updated playerstats for user: " + message.author.username);
 
     return {
       messages: [

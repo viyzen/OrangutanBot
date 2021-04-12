@@ -6,9 +6,6 @@ import {
   Snowflake,
   TextChannel,
 } from "discord.js";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export class DiscordAPI {
   public readonly discordClient = new Client();
@@ -29,7 +26,7 @@ export class DiscordAPI {
       this.discordClient.on("ready", async () => {
         this._isLoggedOn = true;
         await this.refreshCache();
-        console.log("[Discord] Connected to Discord");
+        console.log("[DISCORD] Connected to Discord");
         return resolve();
       });
 
