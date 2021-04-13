@@ -1,39 +1,78 @@
 import { Message } from "discord.js";
 
+import { commandStateStore } from "../../../../command-state/command-state-store";
 import { db } from "../../../../database/player-stats-repository";
-import { AbstractCommandResult } from "../../../abstracts/abstract-command";
+import {
+  AbstractCommandResult,
+  AbstractCommandState,
+} from "../../../abstracts/abstract-command";
+import { ICommandParser } from "../../../abstracts/abstract-parser";
 import { OptionsParser } from "../../../options-parser";
 import { ParsedInput } from "../../../parsed-input";
 import { rps } from "./rps";
 import { Choices, MultipleResults } from "./rps-types";
 
-export class RpsParser {
+export class RpsParser implements ICommandParser {
   public async parseCommand(
     args: string,
     message: Message,
+    commandState?: AbstractCommandState,
   ): Promise<AbstractCommandResult> {
     const options = OptionsParser.getOptions(args);
 
     let numberOfRepeats = 1;
+    let playerChoice: Choices = <any>(
+      ParsedInput.getCurrentWord(args)?.toUpperCase()
+    );
 
     for (const [key, value] of Object.entries(options)) {
       switch (key) {
         case "--help":
+          commandStateStore.delete(message.author.id);
           return { messages: [rps.help] };
         case "--repeat":
-          const repeatTime = parseInt(value, 10);
-          if (isNaN(repeatTime) || repeatTime > 10 || repeatTime <= 0) {
+          numberOfRepeats = parseInt(value, 10);
+          if (
+            isNaN(numberOfRepeats) ||
+            numberOfRepeats > 10 ||
+            numberOfRepeats < 1
+          ) {
             return { messages: [rps.help] };
           }
-          numberOfRepeats = repeatTime;
+        case "--random":
+          playerChoice = Object.values(Choices)[Math.floor(Math.random() * 3)];
       }
     }
-    const playerChoice: Choices = <any>(
-      ParsedInput.getCurrentWord(args)?.toUpperCase()
-    );
+
     if (!Object.values(Choices).includes(playerChoice)) {
+      if (commandState && commandState.question === "item") {
+        if (ParsedInput.getCurrentWord(args)?.toUpperCase() === "C") {
+          commandStateStore.delete(message.author.id);
+          return null;
+        }
+        const newCommandState: AbstractCommandState = {
+          author: message.author.id,
+          channel: message.channel.id,
+          command: this,
+          question: "item",
+        };
+        commandStateStore.set(message.author.id, newCommandState);
+        return { messages: [rps.help, "Select an item:\n\n[c] cancel"] };
+      }
+      if (args === null) {
+        const newCommandState: AbstractCommandState = {
+          author: message.author.id,
+          channel: message.channel.id,
+          command: this,
+          question: "item",
+        };
+        commandStateStore.set(message.author.id, newCommandState);
+        return { messages: ["Select an item:\n\n[c] cancel"] };
+      }
       return { messages: [rps.help] };
     }
+
+    commandStateStore.delete(message.author.id);
 
     const results: MultipleResults = {
       playerWins: 0,

@@ -1,3 +1,5 @@
+import { ICommandParser } from "./abstract-parser";
+
 export interface ICommand {
   name: string;
 
@@ -8,4 +10,11 @@ export interface ICommand {
 
 export interface AbstractCommandResult {
   messages: Array<string>;
+}
+
+export interface AbstractCommandState {
+  command: ICommandParser;
+  author: string;
+  channel: string;
+  question: string;
 }

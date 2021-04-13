@@ -4,7 +4,7 @@ import { Choices, RpsResult, WinType } from "./rps-types";
 class Rps implements ICommand {
   name = "rps";
   help =
-    "Play rock paper scissors, select desired item and use --repeat # to play multiple times (1 to 10)";
+    "Play rock paper scissors, select desired item. \nUse --repeat # to play multiple times (1 to 10), and --random to select a random item";
 
   execute(parameters: { playerChoice: Choices }): RpsResult {
     return this.rps(parameters.playerChoice);

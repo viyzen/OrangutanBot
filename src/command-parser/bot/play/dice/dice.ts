@@ -3,19 +3,18 @@ import { DiceResult } from "./dice-types";
 
 class Dice implements ICommand {
   name = "dice";
-  help = "Roll dice, select number of times to roll (1 to 100)";
+  help =
+    "Roll 6 sided dice, select number of times to roll (1 to 100), and use --d (2 - 100) to roll a dice with a different number of sides";
 
-  execute(parameters: { rollCount: number }): DiceResult {
-    return this.dice(parameters.rollCount);
+  execute(parameters: { rollCount: number; diceSides: number }): DiceResult {
+    return this.dice(parameters.rollCount, parameters.diceSides);
   }
 
-  private dice(rollCount: number): DiceResult {
-    const dice = [1, 2, 3, 4, 5, 6];
-
+  private dice(rollCount: number, diceSides: number): DiceResult {
     let rollTotal = 0;
 
     for (let i = 0; i < rollCount; i++) {
-      rollTotal += dice[Math.floor(Math.random() * 6)];
+      rollTotal += Math.floor(Math.random() * diceSides) + 1;
     }
 
     const rollAvg = +(rollTotal / rollCount).toFixed(3);
